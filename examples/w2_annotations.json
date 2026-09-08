@@ -1,0 +1,62 @@
+[
+  {
+    "box_id": "w2_2025_employer_ein_employer1",
+    "label": "b - Employer identification number (EIN)",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 36, "y": 96, "width": 130, "height": 16 },
+    "format": { "type": "ssn_ein_masked", "mask": "XX-XXXXXXX", "alignment": "left" },
+    "data_reference": "taxpayer.employment[0].employer_ein"
+  },
+  {
+    "box_id": "w2_2025_box1_wages_employer1",
+    "label": "1 - Wages, tips, other compensation",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 320, "y": 96, "width": 120, "height": 16 },
+    "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
+    "data_reference": "taxpayer.employment[0].wages.federal_taxable"
+  },
+  {
+    "box_id": "w2_2025_box2_federal_tax_withheld_employer1",
+    "label": "2 - Federal income tax withheld",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 460, "y": 96, "width": 120, "height": 16 },
+    "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
+    "data_reference": "taxpayer.employment[0].wages.federal_tax_withheld"
+  },
+  {
+    "box_id": "w2_2025_box13_retirement_plan_employer1",
+    "label": "13 - Retirement plan (checkbox)",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 460, "y": 260, "width": 10, "height": 10 },
+    "format": { "type": "checkbox", "true_value": true },
+    "data_reference": "taxpayer.employment[0].retirement_plan"
+  },
+  {
+    "box_id": "w2_2025_box15_state_employer1_row1",
+    "label": "15 - State (row 1 of 2 -- this employer paid wages in two states)",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 36, "y": 300, "width": 30, "height": 14 },
+    "format": { "type": "text", "alignment": "left", "max_characters": 2 },
+    "data_reference": "taxpayer.employment[0].wages.state_wages[0].state"
+  },
+  {
+    "box_id": "w2_2025_box16_state_wages_employer1_row1",
+    "label": "16 - State wages, tips, etc. (row 1 of 2)",
+    "form_id": "w2",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 160, "y": 300, "width": 110, "height": 14 },
+    "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
+    "data_reference": "taxpayer.employment[0].wages.state_wages[0].state_wages_amount"
+  }
+]

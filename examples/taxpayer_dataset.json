@@ -1,0 +1,53 @@
+{
+  "taxpayer": {
+    "first_name": "Jordan",
+    "middle_initial": "A",
+    "last_name": "Rivera",
+    "ssn": "123456789",
+
+    "employment": [
+      {
+        "employer_name": "Acme Robotics Inc.",
+        "employer_ein": "123456789",
+        "retirement_plan": true,
+        "wages": {
+          "federal_taxable": 82150.33,
+          "federal_tax_withheld": 9840.22,
+          "state_wages": [
+            { "state": "CA", "state_wages_amount": 60000.00, "state_tax_withheld": 3200.00 },
+            { "state": "OR", "state_wages_amount": 22150.33, "state_tax_withheld": 1100.00 }
+          ]
+        }
+      },
+      {
+        "employer_name": "Riverbend Consulting LLC",
+        "employer_ein": "987654321",
+        "retirement_plan": false,
+        "wages": {
+          "federal_taxable": 15420.00,
+          "federal_tax_withheld": 1230.10,
+          "state_wages": [
+            { "state": "CA", "state_wages_amount": 15420.00, "state_tax_withheld": 725.40 }
+          ]
+        }
+      }
+    ],
+
+    "dependents": [
+      {
+        "first_name": "Ava",
+        "last_name": "Rivera",
+        "ssn": "234567890",
+        "relationship": "Daughter",
+        "qualifies_for_child_tax_credit": true
+      },
+      {
+        "first_name": "Leo",
+        "last_name": "Rivera",
+        "ssn": "345678901",
+        "relationship": "Son",
+        "qualifies_for_child_tax_credit": true
+      }
+    ]
+  }
+}

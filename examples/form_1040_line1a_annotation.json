@@ -1,0 +1,12 @@
+[
+  {
+    "box_id": "f1040_2025_line1a_total_wages",
+    "label": "Line 1a - Total amount from Form(s) W-2, box 1 (all employers)",
+    "form_id": "f1040",
+    "form_version": "2025",
+    "page": 1,
+    "position": { "x": 504, "y": 450, "width": 72, "height": 12 },
+    "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
+    "data_reference": "SUM(taxpayer.employment[*].wages.federal_taxable)"
+  }
+]

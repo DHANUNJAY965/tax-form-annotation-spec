@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/field-annotation.schema.json",
+  "title": "FieldAnnotation",
+  "description": "One box on one page of one U.S. tax form: where it is, how its value should look, and where that value lives in a taxpayer's data. This is the only object type in the spec -- a form's full annotation set is simply a JSON array of these. See README.md for the full writeup.",
+  "type": "object",
+  "required": ["box_id", "form_id", "form_version", "page", "position", "format", "data_reference"],
+  "additionalProperties": false,
+  "properties": {
+
+    "box_id": {
+      "type": "string",
+      "description": "Stable, unique identifier for this exact box. Convention: <form_id>_<form_version>_<box_label>[_<disambiguator>]. Uniqueness only needs to hold within (form_id, form_version) -- the same box_id string reused under a different form_id is a different box.",
+      "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$",
+      "examples": ["w2_2025_box1_wages_employer1", "f1040_2025_line1a_total_wages"]
+    },
+
+    "label": {
+      "type": "string",
+      "description": "Human-readable description shown to the person authoring or reviewing this annotation. Never used at render time -- purely documentation.",
+      "examples": ["Box 1 - Wages, tips, other compensation"]
+    },
+
+    "form_id": {
+      "type": "string",
+      "description": "Which form this box belongs to. Lowercase, hyphenated, matching common IRS naming.",
+      "examples": ["w2", "f1040", "f1099-nec", "f1120", "f1065"]
+    },
+
+    "form_version": {
+      "type": "string",
+      "description": "The tax year (or revision) this box's position/format is valid for. Forms are redesigned at least annually -- (form_id, form_version) together are this annotation's real identity. A later year's redesign is a NEW set of FieldAnnotation records, never an edit of these coordinates in place.",
+      "examples": ["2025"]
+    },
+
+    "page": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "1-based page number within the form. 1-based (not 0-based) because every place a human refers to this annotation -- a code review comment, a QA ticket, a support call -- says 'page 1', never 'page 0'."
+    },
+
+    "position": { "$ref": "#/$defs/Position" },
+    "format": { "$ref": "#/$defs/Format" },
+
+    "data_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Where this box's value lives in the taxpayer dataset. Either a plain dot/index path, or a closed aggregate function call over a path containing a [*] wildcard. See README.md 'Data reference syntax' for the full grammar and worked examples at increasing nesting depth.",
+      "examples": [
+        "taxpayer.employment[0].wages.federal_taxable",
+        "taxpayer.employment[0].wages.state_wages[1].state_tax_withheld",
+        "SUM(taxpayer.employment[*].wages.federal_taxable)"
+      ]
+    },
+
+    "condition": {
+      "description": "If present, this box is only filled when the comparison holds. Absent = always fill (subject to the value existing).",
+      "$ref": "#/$defs/Condition"
+    }
+  },
+
+  "$defs": {
+
+    "Position": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "additionalProperties": false,
+      "description": "All coordinates are in POINTS (1/72 inch), always -- not a configurable per-record unit. See README.md 'Why points' for the justification. Origin is the TOP-LEFT corner of the page; x grows right, y grows down.",
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+
+    "Format": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["currency", "whole_number", "percentage", "date", "checkbox", "text", "ssn_ein_masked"],
+          "description": "Drives which of the settings below apply -- see README.md's field-by-field table for the exact mapping."
+        },
+        "decimals": {
+          "type": "integer", "minimum": 0, "maximum": 4,
+          "description": "currency / percentage. Default 2 for currency, 1 for percentage."
+        },
+        "alignment": {
+          "type": "string", "enum": ["left", "center", "right"],
+          "description": "Any type. Numeric types default to right; text/date/ssn_ein_masked default to left; checkbox is ignored (always centered)."
+        },
+        "max_characters": {
+          "type": "integer", "minimum": 1,
+          "description": "text / ssn_ein_masked. A hard cap on printed character count, independent of whether the box is visually wide enough -- e.g. a database column limit upstream, not a layout constraint."
+        },
+        "negative_style": {
+          "type": "string", "enum": ["parentheses", "minus"],
+          "description": "currency / whole_number / percentage. Default 'parentheses', matching the IRS's own convention for negative amounts on printed forms."
+        },
+        "date_format": {
+          "type": "string", "default": "MM/DD/YYYY",
+          "description": "date. A pattern using MM, DD, YYYY, YY."
+        },
+        "mask": {
+          "type": "string",
+          "description": "ssn_ein_masked. 'X' marks a digit slot, everything else is a literal separator. Raw digits from the data are laid into the X slots in order.",
+          "examples": ["XXX-XX-XXXX", "XX-XXXXXXX"]
+        },
+        "true_value": {
+          "description": "checkbox. The data value that counts as 'checked'. Defaults to boolean true. Setting this to something else (e.g. a specific enum string) is how several checkbox annotations sharing one data_reference model a single-select group -- see README.md 'Checkbox groups'.",
+          "default": true
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "currency" } } },
+          "then": { "properties": { "decimals": true, "alignment": true, "negative_style": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "whole_number" } } },
+          "then": { "properties": { "alignment": true, "negative_style": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "percentage" } } },
+          "then": { "properties": { "decimals": true, "alignment": true, "negative_style": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "date" } } },
+          "then": { "properties": { "date_format": true, "alignment": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "checkbox" } } },
+          "then": { "properties": { "true_value": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "text" } } },
+          "then": { "properties": { "alignment": true, "max_characters": true, "type": true }, "additionalProperties": false }
+        },
+        {
+          "if": { "properties": { "type": { "const": "ssn_ein_masked" } } },
+          "then": { "properties": { "mask": true, "alignment": true, "max_characters": true, "type": true }, "additionalProperties": false }
+        }
+      ]
+    },
+
+    "Condition": {
+      "type": "object",
+      "required": ["data_reference", "operator"],
+      "additionalProperties": false,
+      "description": "A single comparison -- deliberately not a general boolean expression tree. See README.md 'Why not a full expression language'.",
+      "properties": {
+        "data_reference": {
+          "type": "string",
+          "description": "The path being tested. Same grammar as the top-level data_reference, minus aggregate functions -- a condition tests one concrete value."
+        },
+        "operator": {
+          "type": "string",
+          "enum": ["equals", "not_equals", "greater_than", "less_than", "exists"]
+        },
+        "value": {
+          "description": "Comparison operand. Required for every operator except 'exists', which ignores it."
+        }
+      },
+      "if": { "properties": { "operator": { "const": "exists" } } },
+      "else": { "required": ["value"] }
+    }
+  }
+}
