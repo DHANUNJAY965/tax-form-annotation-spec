@@ -122,7 +122,11 @@ def _render(form_id: str, form_version: str, page: int, data: dict) -> dict:
         if ann.get("required") and (raw_value is None or raw_value == ""):
             notices.append(f"{ann['box_id']}: required value missing at {ann['data_reference']!r}")
 
-        rendered = render_value(ann["format"]["type"], raw_value, ann["format"])
+        try:
+            rendered = render_value(ann["format"]["type"], raw_value, ann["format"])
+        except (ValueError, TypeError) as exc:
+            notices.append(f"{ann['box_id']}: invalid value {raw_value!r} for format {ann['format']['type']!r} ({exc})")
+            continue
         boxes.append({"box_id": ann["box_id"], "label": ann.get("label"), "position": ann["position"], **rendered})
 
     return {

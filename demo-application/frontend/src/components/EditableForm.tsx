@@ -61,8 +61,15 @@ export default function EditableForm({ annotations, page, committedData, onSubmi
               <input
                 type={inputTypeFor(a.format.type)}
                 step={a.format.type === "currency" ? "0.01" : undefined}
+                min={inputTypeFor(a.format.type) === "number" ? 0 : undefined}
                 maxLength={a.format.max_characters}
                 value={draft[a.data_reference] === undefined ? "" : String(draft[a.data_reference])}
+                onKeyDown={(e) => {
+                  // Amounts on a tax form are never negative or in scientific notation
+                  if (inputTypeFor(a.format.type) === "number" && ["e", "E", "+", "-"].includes(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                 onChange={(e) => {
                   const raw = e.target.value;
                   const isNumeric = inputTypeFor(a.format.type) === "number";
