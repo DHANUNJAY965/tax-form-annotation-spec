@@ -1,51 +1,51 @@
 [
   {
-    "box_id": "w2_2025_box17_state_tax_withheld_employer1_row1",
+    "box_id": "w2_2026_box17_state_tax_withheld_employer1_row1",
     "label": "17 - State income tax (row 1 of 2, CA) -- completes the row started in w2_annotations.json",
     "form_id": "w2",
-    "form_version": "2025",
+    "form_version": "2026",
     "page": 1,
-    "position": { "x": 280, "y": 300, "width": 100, "height": 14 },
+    "position": { "x": 281.8, "y": 300, "width": 77.2, "height": 12 },
     "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
     "data_reference": "taxpayer.employment[0].wages.state_wages[0].state_tax_withheld"
   },
   {
-    "box_id": "w2_2025_box15_state_employer1_row2",
+    "box_id": "w2_2026_box15_state_employer1_row2",
     "label": "15 - State (row 2 of 2) -- proves list indexing: same employer, second state",
     "form_id": "w2",
-    "form_version": "2025",
+    "form_version": "2026",
     "page": 1,
-    "position": { "x": 36, "y": 316, "width": 30, "height": 14 },
+    "position": { "x": 38, "y": 324, "width": 25.8, "height": 12 },
     "format": { "type": "text", "alignment": "left", "max_characters": 2 },
     "data_reference": "taxpayer.employment[0].wages.state_wages[1].state"
   },
   {
-    "box_id": "w2_2025_box16_state_wages_employer1_row2",
+    "box_id": "w2_2026_box16_state_wages_employer1_row2",
     "label": "16 - State wages, tips, etc. (row 2 of 2)",
     "form_id": "w2",
-    "form_version": "2025",
+    "form_version": "2026",
     "page": 1,
-    "position": { "x": 160, "y": 316, "width": 110, "height": 14 },
+    "position": { "x": 195.4, "y": 324, "width": 84.4, "height": 12 },
     "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
     "data_reference": "taxpayer.employment[0].wages.state_wages[1].state_wages_amount"
   },
   {
-    "box_id": "w2_2025_box17_state_tax_withheld_employer1_row2",
+    "box_id": "w2_2026_box17_state_tax_withheld_employer1_row2",
     "label": "17 - State income tax (row 2 of 2, OR)",
     "form_id": "w2",
-    "form_version": "2025",
+    "form_version": "2026",
     "page": 1,
-    "position": { "x": 280, "y": 316, "width": 100, "height": 14 },
+    "position": { "x": 281.8, "y": 324, "width": 77.2, "height": 12 },
     "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
     "data_reference": "taxpayer.employment[0].wages.state_wages[1].state_tax_withheld"
   },
   {
-    "box_id": "w2_2025_box1_wages_employer2",
+    "box_id": "w2_2026_box1_wages_employer2",
     "label": "1 - Wages, tips, other compensation -- a SEPARATE, physical second W-2 for the second employer. Same box_id pattern, same position (identical form layout), different page and a different data_reference index.",
     "form_id": "w2",
-    "form_version": "2025",
+    "form_version": "2026",
     "page": 2,
-    "position": { "x": 320, "y": 96, "width": 120, "height": 16 },
+    "position": { "x": 333.2, "y": 72, "width": 118.4, "height": 12 },
     "format": { "type": "currency", "decimals": 2, "alignment": "right", "negative_style": "parentheses" },
     "data_reference": "taxpayer.employment[1].wages.federal_taxable"
   }
