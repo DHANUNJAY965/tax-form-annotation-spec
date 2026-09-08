@@ -6,9 +6,9 @@ import FormViewer from "./components/FormViewer.tsx";
 import type { FieldAnnotation, FormView, RenderResponse, TaxpayerData } from "./types.ts";
 
 const VIEWS: FormView[] = [
-  { key: "w2-1", label: "W-2 -- Employer 1", formId: "w2", formVersion: "2026", page: 1 },
-  { key: "w2-2", label: "W-2 -- Employer 2", formId: "w2", formVersion: "2026", page: 2 },
-  { key: "f1040-1", label: "Form 1040 -- Line 1a", formId: "f1040", formVersion: "2025", page: 1 },
+  { key: "w2-1", label: "W-2 - Employer 1", formId: "w2", formVersion: "2026", page: 1 },
+  { key: "w2-2", label: "W-2 - Employer 2", formId: "w2", formVersion: "2026", page: 2 },
+  { key: "f1040-1", label: "Form 1040 - Line 1a", formId: "f1040", formVersion: "2025", page: 1 },
 ];
 
 function initialViewKey(): string {
@@ -60,17 +60,17 @@ export default function App() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8 pb-16">
+    <div className="mx-auto max-w-7xl px-6 py-8 pb-16">
       {/* Header */}
       <header>
-        <h1 className="mb-1 text-xl font-bold text-slate-900">Tax Form Annotation Spec -- reference renderer</h1>
-        <p className="mb-6 max-w-2xl text-slate-500">
-          Fill in a box below and click Submit -- the value is written into a shared taxpayer
+        <h1 className="mb-1 text-xl font-bold text-slate-900">Tax Form Annotation Spec - reference renderer</h1>
+        <p className="mb-6 max-w-3xl text-slate-500">
+          Fill in a box below and click Submit - the value is written into a shared taxpayer
           record at that box&apos;s exact <code>data_reference</code> path, then resolved and
           formatted by the FastAPI backend and drawn onto the real, unmodified IRS reference
           image. Form 1040&apos;s Line 1a has no inputs of its own: it&apos;s <code>SUM()</code>{" "}
           over both W-2 tabs&apos; wages, so switch to it after filling those in. This app is a
-          demo built on top of the spec -- not part of the graded deliverable itself (see the
+          demo built on top of the spec - not part of the graded deliverable itself (see the
           repo&apos;s <code>README.md</code> &quot;Constraints honored&quot;).
         </p>
       </header>
@@ -94,37 +94,44 @@ export default function App() {
 
       {error && (
         <div className="mb-4 font-mono text-xs text-red-700">
-          Failed to reach the backend at http://127.0.0.1:8000 -- {error}
+          Failed to reach the backend at http://127.0.0.1:8000 - {error}
         </div>
       )}
 
-      {/* Editable input form */}
-      {committedData && (
-        <EditableForm
-          key={activeKey}
-          annotations={annotations}
-          page={active.page}
-          committedData={committedData}
-          onSubmit={handleSubmit}
-          submitLabel={`Submit ${active.label}`}
-        />
-      )}
+      {/* Fields (left) + form preview (right) */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div>
+          {/* Editable input form */}
+          {committedData && (
+            <EditableForm
+              key={activeKey}
+              annotations={annotations}
+              page={active.page}
+              committedData={committedData}
+              onSubmit={handleSubmit}
+              submitLabel={`Submit ${active.label}`}
+            />
+          )}
+        </div>
 
-      {!error && !rendered && <div className="mb-4 font-mono text-xs text-slate-500">Loading…</div>}
+        <div>
+          {!error && !rendered && <div className="mb-4 font-mono text-xs text-slate-500">Loading…</div>}
 
-      {/* Reference form viewer */}
-      {rendered && (
-        <div className="overflow-x-auto rounded-xl border border-slate-300 bg-white p-5">
-          <FormViewer data={rendered} />
-          {rendered.notices.length > 0 && (
-            <div className="mt-4 font-mono text-xs text-amber-700">
-              {rendered.notices.map((n) => (
-                <div key={n}>⚠ {n}</div>
-              ))}
+          {/* Reference form viewer */}
+          {rendered && (
+            <div className="overflow-x-auto rounded-xl border border-slate-300 bg-white p-5">
+              <FormViewer data={rendered} />
+              {rendered.notices.length > 0 && (
+                <div className="mt-4 font-mono text-xs text-amber-700">
+                  {rendered.notices.map((n) => (
+                    <div key={n}>⚠ {n}</div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
