@@ -1,10 +1,10 @@
 # Tax Form Annotation Spec
 
 A general-purpose data structure for describing where a value goes on **any** U.S. tax form —
-W-2, 1040, 1099, 1120, 1065, whatever comes next — so a separate rendering engine can stamp the
+W-2, 1040, 1099, 1120, 1065, whatever comes next so a separate rendering engine can stamp the
 right value into the right box using nothing but these annotations and a taxpayer's data.
 
-This is the spec and worked examples only. **No rendering engine is included or was built** —
+This is the spec and worked examples only. **No rendering engine is included or was built**
 see [Constraints](#constraints-honored) at the bottom for why that's deliberate.
 
 ```
